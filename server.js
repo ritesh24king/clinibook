@@ -45,3 +45,4 @@ app.listen(PORT, () => {
   console.log(`✅ CliniBook SR draait op http://localhost:${PORT}`);
   console.log(`   Database: MySQL (zie config/db.js en je .env-bestand)`);
 });
+
