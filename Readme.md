@@ -130,3 +130,5 @@ De map `node_modules` mag **nooit** worden toegevoegd aan versiebeheer (git). De
 ## Verboden: `.env` bestand
 
 Het `.env` bestand mag **nooit** worden gecommit naar versiebeheer (git). Dit bestand bevat gevoelige gegevens zoals de `JWT_SECRET` en eventuele databasewachtwoorden. Het lekken van dit bestand kan de veiligheid van de hele applicatie in gevaar brengen. Gebruik in plaats daarvan `.env.example` als sjabloon (zonder echte geheimen) en zorg dat `.env` in `.gitignore` staat.
+
+
