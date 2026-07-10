@@ -150,3 +150,4 @@ router.post('/', verifyToken, authorizeRoles('doctor'), async (req, res) => {
 });
 
 module.exports = router;
+
