@@ -127,3 +127,4 @@ CREATE TABLE IF NOT EXISTS notification_preferences (
 -- (In een eerdere versie stond dezelfde data hier ook nog eens dubbel,
 --  wat "Duplicate entry" fouten gaf als je schema.sql én seed.sql beide draaide.)
 
+
