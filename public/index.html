@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CliniBook SR - Premium Medisch Portaal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Main Style Sheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ==================== LOGIN SECTION ==================== -->
+    <div id="login-page" class="page-container">
+        <div class="login-card glass-card">
+            <div class="brand-header">
+                <div class="brand-icon">🩺</div>
+                <h2>CliniBook <span class="brand-accent">SR</span></h2>
+                <p class="subtitle">Uw Gezondheid, Digitaal Beheerd</p>
+            </div>
+
+            <!-- Inloggen -->
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="email-input">📧 Email adres</label>
+                    <input type="email" id="email-input" required autocomplete="username" placeholder="naam@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="password-input">🔒 Wachtwoord</label>
+                    <input type="password" id="password-input" required autocomplete="current-password" placeholder="******">
+                </div>
+                <button type="submit" class="btn-primary">Veilig Inloggen</button>
+                <p class="auth-switch-text">Nog geen account? <a href="#" id="show-register-link">Registreren</a></p>
+            </form>
+
+            <!-- Registreren (patiëntaccount aanmaken) -->
+            <form id="register-form" class="hidden">
+                <div class="input-group">
+                    <label for="reg-name-input">🧑 Volledige naam</label>
+                    <input type="text" id="reg-name-input" required autocomplete="name" placeholder="Jouw naam">
+                </div>
+                <div class="input-group">
+                    <label for="reg-email-input">📧 Email adres</label>
+                    <input type="email" id="reg-email-input" required autocomplete="username" placeholder="naam@email.com">
+                </div>
+                <div class="input-group">
+                    <label for="reg-password-input">🔒 Wachtwoord</label>
+                    <input type="password" id="reg-password-input" required autocomplete="new-password" placeholder="Minimaal 6 tekens" minlength="6">
+                </div>
+                <div class="input-group">
+                    <label for="reg-password-confirm-input">🔒 Bevestig wachtwoord</label>
+                    <input type="password" id="reg-password-confirm-input" required autocomplete="new-password" placeholder="Herhaal wachtwoord" minlength="6">
+                </div>
+                <button type="submit" class="btn-primary">Account aanmaken</button>
+                <p class="auth-switch-text">Heb je al een account? <a href="#" id="show-login-link">Inloggen</a></p>
+            </form>
+
+            <div class="demo-helper-box" id="demo-helper-box">
+                <span class="demo-title">🔑 Snel invullen (demo-accounts, wachtwoord altijd 123456):</span>
+                <div class="demo-fill-buttons">
+                    <button type="button" class="btn-demo-fill" data-email="patient@email.com" data-password="123456">👤 Patiënt</button>
+                    <button type="button" class="btn-demo-fill" data-email="admin@clinic.com" data-password="123456">🩺 Arts</button>
+                    <button type="button" class="btn-demo-fill" data-email="insurance@health.com" data-password="123456">🛡️ Verzekeraar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MAIN APPLICATION CONTAINER ==================== -->
+    <div id="app-container" class="hidden">
+        
+        <!-- Navigation Bar -->
+        <nav class="navbar glass-nav">
+            <div class="nav-logo">
+                <span class="logo-symbol">🩺</span> CliniBook <span class="logo-accent">SR</span>
+            </div>
+            
+            <!-- Patient Nav Links -->
+            <div id="patient-nav" class="nav-links">
+                <button id="nav-dash" class="nav-btn active">📊 Dashboard</button>
+                <button id="nav-afspraak" class="nav-btn">📅 Afspraak Boeken</button>
+                <button id="nav-telemed" class="nav-btn">💬 Contacteer Arts</button>
+            </div>
+
+            <!-- Doctor Nav Links -->
+            <div id="doctor-nav" class="nav-links hidden">
+                <button id="nav-doc-dash" class="nav-btn active">📊 Dashboard & Rapportages</button>
+                <button id="nav-doc-inbox" class="nav-btn">📥 Binnenkomende Afspraken <span id="badge-inbox-count" class="tab-badge">0</span></button>
+                <button id="nav-doc-rx" class="nav-btn">💊 Recept Uitschrijven</button>
+                <button id="nav-doc-admin" class="nav-btn">🛠️ Beheer Poli, Arts & Apo</button>
+            </div>
+
+            <!-- Insurance Nav Links -->
+            <div id="insurance-nav" class="nav-links hidden">
+                <button id="nav-ins-dash" class="nav-btn active">🛡️ Dossiers & Verzekeringen</button>
+            </div>
+
+            <!-- Header Alerts & User Actions -->
+            <div class="nav-user">
+                <!-- Notifications Bell Icon -->
+                <div class="notification-bell-wrapper" id="bell-wrapper">
+                    <button class="btn-bell" id="btn-bell">
+                        🔔 <span id="bell-badge" class="bell-badge hidden">0</span>
+                    </button>
+                    <!-- Bell dropdown menu -->
+                    <div class="bell-dropdown hidden" id="bell-dropdown">
+                        <div class="bell-dropdown-header">
+                            <span>Meldingen</span>
+                            <button id="btn-clear-notifications" class="btn-link">Legen</button>
+                        </div>
+                        <div class="bell-notifications-list" id="bell-notifications-list">
+                            <span class="empty-notifications">Geen nieuwe meldingen.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="user-info">
+                    <span id="user-display-name">Gebruiker</span>
+                    <span id="user-display-role" class="role-badge">Patiënt</span>
+                </div>
+                <button id="btn-logout" class="btn-logout">Uitloggen 🚪</button>
+            </div>
+        </nav>
+        
+        <!-- Content Container -->
+        <main class="main-content">
+
+            <!-- ==================== VIEW: PATIENT DASHBOARD ==================== -->
+            <section id="view-dashboard" class="view-section">
+                <div class="welcome-banner">
+                    <h1 class="welcome-text">Welkom terug, <span id="welcome-name">Lisa</span>! 👋</h1>
+                    <p class="welcome-sub">Hier is een overzicht van uw medische status en aankomende consulten.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card glass-card hover-lift">
+                        <div class="stat-icon-wrapper blue">📅</div>
+                        <div>
+                            <span class="stat-number" id="stat-patient-apts">2</span>
+                            <span class="stat-label">Mijn Afspraken</span>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card hover-lift">
+                        <div class="stat-icon-wrapper teal">💊</div>
+                        <div>
+                            <span class="stat-number" id="stat-patient-rx">1</span>
+                            <span class="stat-label">Actieve Recepten</span>
+                        </div>
+                    </div>
+                    <div class="stat-card glass-card hover-lift">
+                        <div class="stat-icon-wrapper purple">🏥</div>
+                        <div>
+                            <span class="stat-number" id="stat-patient-clinics">5</span>
+                            <span class="stat-label">Medische Polis</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Unique Feature: Patient Medical Timeline -->
+                    <div class="data-block timeline-block glass-card">
+                        <h3>📋 Mijn Medische Tijdlijn</h3>
+                        <p class="section-desc">Een chronologisch overzicht van uw afspraken, rapporten en recepten.</p>
+                        <div id="patient-timeline" class="timeline">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Side blocks: Active Prescriptions & Notifications Preferences -->
+                    <div class="side-flex-block">
+                        <div class="data-block reports-list-block glass-card" style="margin-bottom: 2rem; min-height: auto;">
+                            <h3>💊 Beschikbare Recepten (PDF)</h3>
+                            <p class="section-desc">Verstuur uw recepten rechtstreeks naar een apotheek naar keuze.</p>
+                            <div id="prescriptions-list" class="rx-list">
+                                <!-- Populated by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Notification Preferences Settings Card -->
+                        <div class="data-block settings-block glass-card" style="min-height: auto;">
+                            <h3>🔔 Notificatie Voorkeuren</h3>
+                            <p class="section-desc">Kies hoe en wanneer u herinneringen wilt ontvangen voor afspraken.</p>
+                            <form id="preferences-form">
+                                <div class="input-group">
+                                    <label>Ontvang meldingen via:</label>
+                                    <div class="checkbox-group" style="border: none; padding: 0;">
+                                        <label class="cb-label"><input type="checkbox" id="pref-email" checked> 📧 E-mail Notificaties</label>
+                                        <label class="cb-label"><input type="checkbox" id="pref-sms"> 📱 SMS Herinneringen</label>
+                                        <label class="cb-label"><input type="checkbox" id="pref-push" checked> 💻 Browser Pushberichten</label>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label for="pref-time">Stuur herinnering vooraf:</label>
+                                    <select id="pref-time">
+                                        <option value="1">1 uur van tevoren</option>
+                                        <option value="2" selected>2 uur van tevoren</option>
+                                        <option value="24">24 uur van tevoren</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn-primary" style="width: 100%; font-size: 0.85rem; padding: 0.6rem;">Instellingen Opslaan</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== VIEW: PATIENT BOOK APPOINTMENT ==================== -->
+            <section id="view-afspraak" class="view-section hidden">
+                <div class="form-block-center glass-card">
+                    <div class="form-header">
+                        <span class="form-header-icon">📅</span>
+                        <h2>Nieuwe Afspraak Boeken</h2>
+                        <p>Kies een specialist, datum en een beschikbaar tijdstip.</p>
+                    </div>
+
+                    <form id="appointment-form">
+                        <!-- Step 1: Select Clinic -->
+                        <div class="input-group">
+                            <label for="select-clinic">🏢 Kies Medische Poli (Afdeling):</label>
+                            <select id="select-clinic" required>
+                                <option value="">-- Selecteer een poli --</option>
+                            </select>
+                        </div>
+
+                        <!-- Step 2: Select Doctor -->
+                        <div class="input-group">
+                            <label for="select-doctor">%🩺 Kies Arts / Specialist:</label>
+                            <select id="select-doctor" required disabled>
+                                <option value="">-- Selecteer eerst een poli --</option>
+                            </select>
+                        </div>
+
+                        <!-- Step 3: Choose Date -->
+                        <div class="input-group">
+                            <label for="appointment-date">📆 Kies Datum:</label>
+                            <input type="date" id="appointment-date" required disabled>
+                        </div>
+
+                        <!-- Step 4: Unique Feature: Interactive Time-Slot Picker -->
+                        <div class="input-group" id="slots-picker-container">
+                            <label>⏰ Beschikbare Tijdstippen:</label>
+                            <p class="helper-text">Kies een groen gemarkeerd tijdslot. Rode tijden zijn bezet.</p>
+                            <div id="slots-grid" class="slots-grid-wrapper">
+                                <span class="slots-placeholder">Selecteer eerst een poli, arts en datum om tijden te laden.</span>
+                            </div>
+                            <input type="hidden" id="selected-timeslot" required>
+                        </div>
+
+                        <!-- Step 5: Symptom/Reason -->
+                        <div class="input-group">
+                            <label for="appointment-reason">📝 Reden van Bezoek & Symptomen:</label>
+                            <textarea id="appointment-reason" rows="3" placeholder="Beschrijf hier kort uw klachten..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Afspraak Aanvragen</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ==================== VIEW: PATIENT TELEMEDICINE (CONTACT DOCTOR) ==================== -->
+            <section id="view-telemed" class="view-section hidden">
+                <div class="telemed-layout">
+                    <!-- Doctor selector sidebar -->
+                    <div class="telemed-sidebar glass-card">
+                        <h3>💬 Mijn Behandelaren</h3>
+                        <p class="section-desc">Kies een dokter om contact op te nemen.</p>
+                        <div class="doctor-chats-list" id="doctor-chats-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Telemed actions panels -->
+                    <div class="telemed-main glass-card" id="telemed-main-content">
+                        <!-- Select Prompt View -->
+                        <div class="telemed-prompt" id="telemed-prompt-select">
+                            <span class="prompt-icon">💬</span>
+                            <h4>Selecteer een medisch specialist</h4>
+                            <p>Kies een arts aan de linkerkant om de chat te openen, te bellen of vragen in te dienen.</p>
+                        </div>
+
+                        <!-- Chat & Call Workspace (Initially Hidden) -->
+                        <div class="telemed-workspace hidden" id="telemed-workspace">
+                            <div class="workspace-header">
+                                <div class="workspace-doc-info">
+                                    <h4 id="telemed-doc-name">Dr. Amrita Ramdin</h4>
+                                    <span id="telemed-doc-specialty" class="role-badge">Huisarts</span>
+                                </div>
+                                <div class="call-actions">
+                                    <button class="btn-icon-action btn-audio-call" id="btn-audio-call">📞 Audio Bellen</button>
+                                    <button class="btn-icon-action btn-video-call" id="btn-video-call">📹 Video Consult</button>
+                                </div>
+                            </div>
+
+                            <!-- Inner Tabs: Chat vs Q&A -->
+                            <div class="workspace-tabs">
+                                <button class="tab-w active" id="tab-chat-link">💬 Live Chat</button>
+                                <button class="tab-w" id="tab-qa-link">❓ Q&A Medische Vragen</button>
+                            </div>
+
+                            <!-- Tab Content: Live Chat -->
+                            <div class="tab-w-content chat-content-pane" id="pane-chat">
+                                <div class="chat-messages-container" id="chat-messages-container">
+                                    <!-- Messages populate here -->
+                                </div>
+                                <form id="chat-message-form" class="chat-input-bar">
+                                    <input type="text" id="chat-text-input" placeholder="Typ uw medische vraag of bericht..." required>
+                                    <button type="submit" class="btn-primary">Verstuur ✈️</button>
+                                </form>
+                            </div>
+
+                            <!-- Tab Content: Q&A Questions Form -->
+                            <div class="tab-w-content hidden" id="pane-qa">
+                                <div class="qa-container">
+                                    <div class="qa-form-block">
+                                        <h5>Stel een niet-dringende medische vraag:</h5>
+                                        <form id="qa-question-form">
+                                            <textarea id="qa-question-text" rows="3" placeholder="Typ hier uw gezondheidsvraag. De arts probeert dit binnen 24 uur te beantwoorden..." required></textarea>
+                                            <button type="submit" class="btn-primary" style="margin-top: 0.5rem;">Vraag Indienen</button>
+                                        </form>
+                                    </div>
+                                    <div class="qa-history">
+                                        <h5>Gestelde Vragen & Antwoorden</h5>
+                                        <div class="qa-list" id="qa-list">
+                                            <!-- Questions list populate -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== VIEW: DOCTOR DASHBOARD & REPORTS ==================== -->
+            <section id="view-doc-dashboard" class="view-section hidden">
+                <div class="welcome-banner">
+                    <h1 class="welcome-text">Medisch Dashboard</h1>
+                    <p class="welcome-sub">Monitoreer poliklinische belastingen en bekijk kliniek statistieken.</p>
+                </div>
+
+                <div class="stats-grid" id="doctor-stats-grid">
+                    <div class="stat-card glass-card">
+                        <span class="stat-number text-yellow" id="stat-doc-pending">-</span>
+                        <span class="stat-label">In Afwachting</span>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <span class="stat-number text-teal" id="stat-doc-approved">-</span>
+                        <span class="stat-label">Goedgekeurde Consulten</span>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <span class="stat-number text-blue" id="stat-doc-doctors">-</span>
+                        <span class="stat-label">Specialisten Actief</span>
+                    </div>
+                    <div class="stat-card glass-card">
+                        <span class="stat-number text-purple" id="stat-doc-prescriptions">-</span>
+                        <span class="stat-label">Recepten Uitgegeven</span>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <!-- Statistics table: Clinic Load -->
+                    <div class="data-block glass-card">
+                        <h3>🏢 Belasting per Polikliniek</h3>
+                        <p class="section-desc">Totaal aantal geboekte afspraken per afdeling.</p>
+                        <table class="report-table" id="clinic-load-table">
+                            <thead>
+                                <tr>
+                                    <th>Polikliniek</th>
+                                    <th>Aantal Afspraken</th>
+                                    <th>Status Overzicht</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Statistics table: Doctor Stats -->
+                    <div class="data-block glass-card">
+                        <h3>👨‍⚕️ Afspraken per Medisch Specialist</h3>
+                        <p class="section-desc">Overzicht van consulten per actieve arts.</p>
+                        <table class="report-table" id="doctor-load-table">
+                            <thead>
+                                <tr>
+                                    <th>Arts</th>
+                                    <th>Specialisme</th>
+                                    <th>Totaal Consulten</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== VIEW: DOCTOR INBOX ==================== -->
+            <section id="view-doc-inbox" class="view-section hidden">
+                <div class="data-block glass-card">
+                    <div class="block-header">
+                        <h3>📥 Binnenkomende Consultaanvragen</h3>
+                        <p class="section-desc">Keur afspraken goed en voeg eventueel direct voorlopige diagnoses/rapportages toe.</p>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="appointments-table" id="incoming-appointments-table">
+                            <thead>
+                                <tr>
+                                    <th>Patiënt</th>
+                                    <th>Arts / Specialist</th>
+                                    <th>Datum & Tijd</th>
+                                    <th>Symptoom / Klacht</th>
+                                    <th>Actie / Beslissing</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== VIEW: DOCTOR RX WRITING ==================== -->
+            <section id="view-doc-rx" class="view-section hidden">
+                <div class="form-block-center glass-card">
+                    <div class="form-header">
+                        <span class="form-header-icon">💊</span>
+                        <h2>Recept Uitschrijven</h2>
+                        <p>Schrijf een recept uit, definieer de geldigheid en upload optioneel een foto/scan van het originele handgeschreven recept.</p>
+                    </div>
+
+                    <form id="prescription-form">
+                        <!-- Select Patient -->
+                        <div class="input-group">
+                            <label for="rx-select-patient">👤 Selecteer Patiënt:</label>
+                            <select id="rx-select-patient" required>
+                                <option value="">-- Kies patiënt --</option>
+                            </select>
+                        </div>
+
+                        <!-- Medication Name -->
+                        <div class="input-group">
+                            <label for="rx-medication">💊 Medicijnnaam + Sterkte:</label>
+                            <input type="text" id="rx-medication" placeholder="Bijv. Amoxicilline 500mg" required>
+                        </div>
+
+                        <!-- Dosage -->
+                        <div class="input-group">
+                            <label for="rx-dosage">⚖️ Dosering / Hoeveelheid:</label>
+                            <input type="text" id="rx-dosage" placeholder="Bijv. 3 maal daags 1 tablet" required>
+                        </div>
+
+                        <!-- Expiration Date -->
+                        <div class="input-group">
+                            <label for="rx-validity">📆 Geldig tot (Verloopdatum):</label>
+                            <input type="date" id="rx-validity" required>
+                        </div>
+
+                        <!-- Handwritten prescription image upload -->
+                        <div class="input-group">
+                            <label for="rx-photo-upload">📸 Foto/scan uploaden van handgeschreven recept (Optioneel):</label>
+                            <input type="file" id="rx-photo-upload" accept="image/*">
+                            <p class="helper-text">Voor originele doktershandtekening en vreemde talen/medisch jargon.</p>
+                        </div>
+
+                        <!-- Instructions -->
+                        <div class="input-group">
+                            <label for="rx-instructions">📝 Gebruiksinstructies:</label>
+                            <textarea id="rx-instructions" rows="3" placeholder="Bijv. Innemen na de maaltijd." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Recept Genereren & Opslaan</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ==================== VIEW: DOCTOR & CLINIC ADMIN PANEL ==================== -->
+            <section id="view-doc-admin" class="view-section hidden">
+                <div class="admin-grid">
+                    <!-- Column 1: Add Clinic & Add Pharmacy -->
+                    <div class="admin-sidebar-flex">
+                        <div class="data-block glass-card" style="margin-bottom: 2rem;">
+                            <div class="form-header">
+                                <span class="form-header-icon">🏢</span>
+                                <h3>Nieuwe Polikliniek Toevoegen</h3>
+                            </div>
+                            <form id="add-clinic-form">
+                                <div class="input-group">
+                                    <label for="new-clinic-name">Polikliniek Naam:</label>
+                                    <input type="text" id="new-clinic-name" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="new-clinic-desc">Beschrijving:</label>
+                                    <textarea id="new-clinic-desc" rows="2" required></textarea>
+                                </div>
+                                <button type="submit" class="btn-primary" style="width: 100%;">Poli Toevoegen</button>
+                            </form>
+                        </div>
+
+                        <!-- Add Pharmacy Form -->
+                        <div class="data-block glass-card">
+                            <div class="form-header">
+                                <span class="form-header-icon">🏥</span>
+                                <h3>Nieuwe Apotheek Toevoegen</h3>
+                            </div>
+                            <form id="add-pharmacy-form">
+                                <div class="input-group">
+                                    <label for="new-phar-name">Apotheek Naam:</label>
+                                    <input type="text" id="new-phar-name" placeholder="Bijv. Apotheek Self-Reliance Noord" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="new-phar-address">Adres / Locatie:</label>
+                                    <input type="text" id="new-phar-address" placeholder="Bijv. Wilhelminastraat 8" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="new-phar-phone">Telefoonnummer:</label>
+                                    <input type="text" id="new-phar-phone" placeholder="Bijv. +597 455-555" required>
+                                </div>
+                                <button type="submit" class="btn-primary" style="width: 100%;">Apotheek Toevoegen</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Add Doctor -->
+                    <div class="data-block glass-card">
+                        <div class="form-header">
+                            <span class="form-header-icon">👨‍⚕️</span>
+                            <h3>Nieuwe Arts Toevoegen</h3>
+                        </div>
+                        <form id="add-doctor-form">
+                            <div class="input-group">
+                                <label for="new-doc-name">Arts Naam:</label>
+                                <input type="text" id="new-doc-name" placeholder="Dr. J. Premchand" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="new-doc-specialty">Specialisme:</label>
+                                <input type="text" id="new-doc-specialty" placeholder="Cardioloog" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="new-doc-clinic">Polikliniek:</label>
+                                <select id="new-doc-clinic" required>
+                                    <option value="">-- Kies polikliniek --</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label>Werkrooster & Beschikbaarheid (Dagen):</label>
+                                <div class="checkbox-group">
+                                    <label class="cb-label"><input type="checkbox" name="workdays" value="Monday" checked> Maandag (09:00 - 15:00)</label>
+                                    <label class="cb-label"><input type="checkbox" name="workdays" value="Tuesday" checked> Dinsdag (09:00 - 15:00)</label>
+                                    <label class="cb-label"><input type="checkbox" name="workdays" value="Wednesday" checked> Woensdag (09:00 - 15:00)</label>
+                                    <label class="cb-label"><input type="checkbox" name="workdays" value="Thursday" checked> Donderdag (09:00 - 15:00)</label>
+                                    <label class="cb-label"><input type="checkbox" name="workdays" value="Friday" checked> Vrijdag (09:00 - 15:00)</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-primary" style="width:100%;">Arts Toevoegen</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==================== VIEW: INSURANCE / VERZEKERING DASHBOARD ==================== -->
+            <section id="view-ins-dashboard" class="view-section hidden">
+                <div class="welcome-banner">
+                    <h1 class="welcome-text">🛡️ Verzekerings Controleportaal</h1>
+                    <p class="welcome-sub">Valideer patiëntendossiers, controleer declaraties en raadpleeg medische geschiedenissen.</p>
+                </div>
+
+                <div class="ins-grid">
+                    <!-- Left Column: Patients selector -->
+                    <div class="ins-sidebar glass-card">
+                        <h3>👥 Geregistreerde Patiënten</h3>
+                        <p class="section-desc">Kies een verzekerde cliënt om het volledige medische dossier te openen.</p>
+                        <div class="ins-patient-list" id="ins-patient-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Dossier display -->
+                    <div class="ins-main glass-card" id="ins-dossier-workspace">
+                        <!-- Select Prompt -->
+                        <div class="telemed-prompt" id="ins-prompt-select">
+                            <span class="prompt-icon">🛡️</span>
+                            <h4>Selecteer een verzekerde cliënt</h4>
+                            <p>Kies een patiënt in de zijbalk om het dossier en de geschreven rapporten/recepten in te zien.</p>
+                        </div>
+
+                        <!-- Dossier Workspace -->
+                        <div class="ins-dossier-content hidden" id="ins-dossier-content">
+                            <div class="dossier-header">
+                                <div>
+                                    <h4 id="ins-patient-name">Lisa Patiënt</h4>
+                                    <span id="ins-patient-email" class="role-badge">patient@email.com</span>
+                                </div>
+                                <div class="insurance-badge">SZF Actief ✅</div>
+                            </div>
+
+                            <!-- Cloud Storage Info Panel (Storage scaling request) -->
+                            <div class="storage-info-box">
+                                <div class="storage-meta">
+                                    <span>💾 **Dossier Opslag Capaciteit (MySQL + bestandsopslag)**</span>
+                                    <span id="storage-utilization-text">1.2 MB / 100 GB (0.001%)</span>
+                                </div>
+                                <div class="storage-bar-wrapper">
+                                    <div class="storage-bar" id="storage-bar" style="width: 1%;"></div>
+                                </div>
+                                <div class="storage-expand-hint">
+                                    <strong>💡 Opslag Opschalen?</strong>
+                                    Foto-uploads staan als bestand op de server (map <code>/uploads</code>), met alleen het bestandspad opgeslagen in MySQL. Bij grotere schaal wordt aangeraden om over te stappen op **Amazon S3** of **Google Cloud Storage** voor de medische dossiers.
+                                    <button class="btn-link" onclick="openStorageModal()">Klik hier om S3 Migratie aan te vragen</button>
+                                </div>
+                            </div>
+
+                            <!-- Double Column Dossier Data -->
+                            <div class="dossier-grid">
+                                <!-- Dossier timeline of medical history -->
+                                <div class="dossier-history">
+                                    <h5>📋 Medische Tijdlijn Historie</h5>
+                                    <div class="timeline" id="ins-timeline-view">
+                                        <!-- Timeline populated dynamically -->
+                                    </div>
+                                </div>
+
+                                <!-- Insurer note logs -->
+                                <div class="dossier-logs">
+                                    <h5>✍️ Verzekeraars Logboek & Dossiernotities</h5>
+                                    <p class="section-desc">Voeg interne notities of poliscontroles toe aan het dossier van de cliënt.</p>
+                                    <form id="add-dossier-note-form" class="note-form">
+                                        <textarea id="new-dossier-note" rows="3" placeholder="Voer hier autorisatienotities, poliswijzigingen of declaratiegoedkeuringen in..." required></textarea>
+                                        <button type="submit" class="btn-primary" style="margin-top: 0.5rem; width:100%; font-size: 0.85rem;">Notitie Opslaan in Dossier</button>
+                                    </form>
+                                    <div class="dossier-notes-list" id="ins-dossier-notes-list">
+                                        <!-- Notes populated dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- ==================== APPOINTMENT APPROVAL MODAL ==================== -->
+    <div id="approve-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3>🩺 Consult Goedkeuren & Beoordelen</h3>
+                <button class="btn-close-modal" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p>U keurt de afspraak van <strong><span id="modal-patient-name">Patient</span></strong> goed.</p>
+                <div class="input-group">
+                    <label for="modal-report-text">📋 Doktersrapport / Consultatieadvies (Optioneel):</label>
+                    <textarea id="modal-report-text" rows="4" placeholder="Schrijf hier adviezen, bevindingen of instructies..."></textarea>
+                </div>
+                <input type="hidden" id="modal-apt-id">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-action btn-reject" onclick="closeModal()">Annuleren</button>
+                <button class="btn-action btn-approve" id="btn-modal-confirm">✓ Bevestigen & Opslaan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== IMAGE PREVIEW MODAL ==================== -->
+    <div id="image-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-card" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3>📸 Geüpload Handgeschreven Recept</h3>
+                <button class="btn-close-modal" onclick="closeImageModal()">×</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <img id="modal-preview-img" src="" alt="Geüpload Recept" style="max-width: 100%; max-height: 400px; border-radius: var(--radius-sm); border: 1px solid #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <p class="helper-text" style="margin-top: 1rem;">Dit document bevat de originele artsenhandtekening en voorschriften.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== APOTHEEK SELECT MODAL (FORWARDING) ==================== -->
+    <div id="forward-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3>🏥 Recept Doorsturen naar Apotheek</h3>
+                <button class="btn-close-modal" onclick="closeForwardModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <p>Selecteer een aangesloten apotheek om uw recept direct digitaal te verzenden:</p>
+                <div class="input-group" style="margin-top: 1rem;">
+                    <label for="forward-select-pharmacy">Kies Apotheek:</label>
+                    <select id="forward-select-pharmacy" required>
+                        <option value="">-- Selecteer apotheek --</option>
+                    </select>
+                </div>
+                <input type="hidden" id="forward-rx-id">
+            </div>
+            <div class="modal-footer">
+                <button class="btn-action btn-reject" onclick="closeForwardModal()">Annuleren</button>
+                <button class="btn-action btn-approve" id="btn-forward-submit">✈️ Direct Verzenden</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TELEMEDICINE MOCK CALL OVERLAY ==================== -->
+    <div id="call-overlay" class="modal-overlay hidden" style="background: rgba(15, 23, 42, 0.95); z-index: 3000;">
+        <div class="call-interface" style="text-align: center; color: white; width: 100%; max-width: 450px;">
+            <!-- Call state: Ringing vs Connected -->
+            <div id="call-avatar-container">
+                <div class="pulse-call-ring"></div>
+                <div class="call-avatar" style="width: 120px; height: 120px; border-radius: 50%; background: var(--primary); margin: 0 auto; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; border: 4px solid white; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">🩺</div>
+            </div>
+
+            <h3 id="call-doctor-title" style="margin-top: 2rem; font-size: 1.5rem; font-weight: 700;">Dr. Amrita Ramdin</h3>
+            <p id="call-status-label" style="color: #38bdf8; font-weight: 500; font-size: 1rem; margin-top: 0.5rem; letter-spacing: 0.05em; text-transform: uppercase;">VERBINDEN...</p>
+            <p id="call-timer" class="hidden" style="font-size: 1.25rem; font-family: monospace; margin-top: 0.5rem;">00:00</p>
+
+            <!-- Video Call Feeds Container (shown only for video calls after connection) -->
+            <div id="video-feeds-container" class="hidden" style="margin-top: 2rem; border-radius: 12px; overflow: hidden; background: #1e293b; border: 1px solid #334155; position: relative;">
+                <!-- Doctor feed -->
+                <div style="height: 240px; display: flex; align-items: center; justify-content: center; background: #0f172a; font-size: 4rem;">👨‍⚕️</div>
+                <!-- Local Webcam Feed -->
+                <video id="local-webcam" autoplay playsinline muted style="position: absolute; bottom: 10px; right: 10px; width: 100px; height: 75px; border-radius: 6px; border: 2px solid white; background: #334155; object-fit: cover;"></video>
+            </div>
+
+            <!-- Call Controls -->
+            <div class="call-controls" style="margin-top: 3rem; display: flex; justify-content: center; gap: 2rem;">
+                <button class="btn-call-action btn-mute" style="width: 50px; height: 50px; border-radius: 50%; border: none; background: #334155; color: white; cursor: pointer; font-size: 1.2rem;">🎤</button>
+                <button class="btn-call-action btn-hangup" id="btn-hangup" style="width: 65px; height: 65px; border-radius: 50%; border: none; background: var(--danger); color: white; cursor: pointer; font-size: 1.6rem; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);">📞</button>
+                <button class="btn-call-action btn-speaker" style="width: 50px; height: 50px; border-radius: 50%; border: none; background: #334155; color: white; cursor: pointer; font-size: 1.2rem;">🔊</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== STORAGE SCALING EXPLANATION MODAL ==================== -->
+    <div id="storage-modal" class="modal-overlay hidden">
+        <div class="modal-content glass-card" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3>☁️ Cloud Storage Opschaling (AWS S3)</h3>
+                <button class="btn-close-modal" onclick="closeStorageModal()">×</button>
+            </div>
+            <div class="modal-body" style="font-size: 0.9rem; line-height: 1.5; color: var(--text-main);">
+                <p>Voor grootschalige medische portals worden foto-uploads en dossier-scans niet rechtstreeks op de webserver opgeslagen. Dit kan de schijfruimte van de server verstoppen en het opschalen lastiger maken.</p>
+                <p style="margin-top: 1rem;"><strong>Aanbevolen migratiestappen naar Amazon S3:</strong></p>
+                <ol style="margin-top: 0.5rem; padding-left: 1.25rem;">
+                    <li>Maak een AWS S3 Bucket aan (bijv. <code>clinibook-sr-dossiers</code>).</li>
+                    <li>Installeer de AWS SDK via npm: <code>npm install @aws-sdk/client-s3</code>.</li>
+                    <li>Wijzig de upload logica in <code>routes/prescriptions.js</code> om bestanden direct naar de S3 bucket te streamen en sla enkel de beveiligde S3 URL op in de MySQL-database (kolom <code>file_path</code>).</li>
+                    <li>Gebruik AWS IAM-rollen en gecodeerde URL's (Presigned URL's) zodat patiëntgegevens enkel via geautoriseerde verzoeken te downloaden zijn (i.v.m. medische privacywetgeving).</li>
+                </ol>
+                <p style="margin-top: 1rem; color: var(--primary); font-weight: 600;">Simulatie van verbinding met AWS S3-endpoint... Actief! ✅</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" style="width: 100%; font-size: 0.9rem;" onclick="closeStorageModal()">Begrepen, Sluiten</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- UI Alert Notification Toast -->
+    <div id="toast-notification" class="toast hidden">
+        <span id="toast-message">Melding</span>
+    </div>
+
+    <!-- Main Logic Script -->
+    <script src="js/script.js"></script>
+</body>
+</html>

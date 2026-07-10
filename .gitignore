@@ -1,0 +1,10 @@
+.DS_Store
+dist
+logs
+*.log
+node_modules
+.env
+.env.test
+!.env.example
+uploads/*
+!uploads/.gitkeep
