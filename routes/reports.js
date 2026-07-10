@@ -93,3 +93,4 @@ router.get('/patient', verifyToken, async (req, res) => {
 });
 
 module.exports = router;
+
