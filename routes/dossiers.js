@@ -210,3 +210,4 @@ router.post('/:id/notification-preferences', verifyToken, async (req, res) => {
 });
 
 module.exports = router;
+
