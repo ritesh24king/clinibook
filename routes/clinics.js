@@ -32,3 +32,4 @@ router.post('/', verifyToken, authorizeRoles('doctor'), validateClinic, async (r
 });
 
 module.exports = router;
+
