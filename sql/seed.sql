@@ -4,7 +4,7 @@
 -- (bcrypt-hash hieronder, gegenereerd met bcrypt.hash('123456', 10))
 -- ============================================================
 
-USE clinibook;
+USE lms_clone;
 
 -- ------------------------------------------------------------
 -- Clinics
