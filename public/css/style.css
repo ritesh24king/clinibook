@@ -1,5 +1,4 @@
 /* ==================== DESIGN SYSTEM VARIABLES ==================== */
-
 :root {
     --primary: #115e59;
     --primary-hover: #0d4f4b;
@@ -1496,3 +1495,4 @@ main.main-content {
     from { transform: translateY(100px); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
 }
+
